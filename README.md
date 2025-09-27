@@ -6,7 +6,7 @@ Web application using Next.js and Bootstrap for user and employee management.
 
 - JWT Authentication
 - User Pages (add)
-- Employee Pages (add, edit, delete) + Photo Upload
+- Employee Pages (add, edit, delete) + Photo Upload (Only: JPG, JPEG)
 - Responsive design (mobile-friendly)
 - Toast notifications
 - Smooth animations
@@ -24,7 +24,7 @@ Web application using Next.js and Bootstrap for user and employee management.
    ```
 
 2. **Make sure backend is running**
-   - Backend must run at `http://localhost:4001`
+   - Backend must run at `http://localhost:_your_backend_port`
 
 ## Running the App
 
@@ -57,8 +57,6 @@ Open browser at: `http://localhost:3000`
 ### 👥 Users (`/users`)
 - Users table
 - Add new user (modal)
-- Edit user (modal)
-- Delete user (confirmation)
 - Role: admin/staff
 
 ### Employees (`/employees`)
@@ -106,7 +104,6 @@ frontend/
 ## Troubleshooting
 
 **Can't connect to API?**
-- Make sure backend runs on port 4001
 - Check CORS settings in backend
 
 **Login failed?**
