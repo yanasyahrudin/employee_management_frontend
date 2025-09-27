@@ -33,7 +33,7 @@ export default function Employees() {
   const [modalImage, setModalImage] = useState({ src: '', name: '', position: '' });
   const [showConfirm, setShowConfirm] = useState(false);
   const [confirmTargetId, setConfirmTargetId] = useState(null);
-  const { token, isLoaded, handleAuthError } = useAuth();
+  const { token, isLoaded, handleAuthError, isRedirecting } = useAuth();
 
   const fetchEmps = useCallback(async () => {
     if (!token) {
@@ -55,12 +55,10 @@ export default function Employees() {
     if (token) {
       fetchEmps();
     } else if (isLoaded) {
-      // If auth finished loading and there's no token, ensure we stop the loading spinner
       setLoading(false);
     }
   }, [token, fetchEmps, isLoaded]);
 
-  // Keyboard support for modal
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape' && showModal) {
@@ -70,7 +68,7 @@ export default function Employees() {
 
     if (showModal) {
       document.addEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = 'hidden'; // Prevent background scroll
+      document.body.style.overflow = 'hidden'; 
     }
 
     return () => {
@@ -78,6 +76,17 @@ export default function Employees() {
       document.body.style.overflow = 'unset';
     };
   }, [showModal]);
+
+ 
+  if (isRedirecting || !isLoaded) {
+    return (
+      <Layout>
+        <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
+          <LoadingSpinner />
+        </div>
+      </Layout>
+    );
+  }
 
   function onFile(e) {
     const f = e.target.files[0];

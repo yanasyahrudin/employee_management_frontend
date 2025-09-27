@@ -5,7 +5,7 @@ Web application using Next.js and Bootstrap for user and employee management.
 ## Features
 
 - JWT Authentication
-- User Pages (add, edit, delete)
+- User Pages (add)
 - Employee Pages (add, edit, delete) + Photo Upload
 - Responsive design (mobile-friendly)
 - Toast notifications

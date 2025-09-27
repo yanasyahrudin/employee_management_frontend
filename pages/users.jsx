@@ -20,7 +20,7 @@ export default function Users() {
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({ username: '', password: '', fullname: '' });
   const [submitting, setSubmitting] = useState(false);
-  const { token, isLoaded, handleAuthError } = useAuth();
+  const { token, isLoaded, handleAuthError, isRedirecting } = useAuth();
 
   // Fetch users when token is available (useCallback to satisfy hook deps)
   const fetchUsers = useCallback(async () => {
@@ -40,6 +40,17 @@ export default function Users() {
   useEffect(() => {
     if (token) fetchUsers();
   }, [token, fetchUsers]);
+
+  // Show loading spinner while redirecting or not loaded
+  if (isRedirecting || !isLoaded) {
+    return (
+      <Layout>
+        <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
+          <LoadingSpinner />
+        </div>
+      </Layout>
+    );
+  }
 
   async function createUser(e) {
     e.preventDefault();
@@ -71,14 +82,6 @@ export default function Users() {
     } finally {
       setSubmitting(false);
     }
-  }
-
-  if (!isLoaded) {
-    return (
-      <Layout>
-        <LoadingSpinner text="Memuat halaman users..." />
-      </Layout>
-    );
   }
 
   return (

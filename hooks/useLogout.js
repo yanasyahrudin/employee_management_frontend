@@ -12,21 +12,20 @@ export const useLogout = () => {
     setIsLoggingOut(true);
     
     try {
-      // Clear localStorage
+      // Clear localStorage immediately
       if (typeof window !== 'undefined') {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        localStorage.clear();
       }
       
       toast.success('Logout berhasil');
       
-      setTimeout(() => {
-        if (typeof window !== 'undefined') {
-          window.location.href = '/login';
-        } else {
-          router.replace('/login');
-        }
-      }, 500);
+      await router.push('/login');
+      
+      if (typeof window !== 'undefined') {
+        window.location.reload();
+      }
       
     } catch (error) {
       console.error('Logout error:', error);
@@ -34,8 +33,6 @@ export const useLogout = () => {
       
       if (typeof window !== 'undefined') {
         window.location.href = '/login';
-      } else {
-        router.replace('/login');
       }
     } finally {
       setIsLoggingOut(false);

@@ -15,14 +15,19 @@ export default function Login() {
   const router = useRouter();
 
   useEffect(() => {
-    // Clear any previous errors on page load
     setError(null);
     
-    // Check if user is already logged in
-    const token = localStorage.getItem('token');
-    if (token) {
-      router.replace('/users');
-    }
+    const timeoutId = setTimeout(() => {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+      if (token) {
+        setIsLoading(true);
+        router.replace('/users').finally(() => {
+          setIsLoading(false);
+        });
+      }
+    }, 100);
+
+    return () => clearTimeout(timeoutId);
   }, [router]);
 
   async function submit(e) {
@@ -32,16 +37,27 @@ export default function Login() {
     
     try {
       const { data } = await apiClient().post('/auth/login', { username, password });
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      
+      // Store auth data
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+      }
+      
       toast.success('Login berhasil');
-      router.push('/users');
+      
+      setTimeout(async () => {
+        await router.push('/users');
+        if (typeof window !== 'undefined') {
+          window.location.reload();
+        }
+      }, 500);
+      
     } catch (err) {
       console.error('Login error:', err);
       const message = err.response?.data?.error || err.message || 'Login gagal. Silakan coba lagi.';
       setError(message);
       toast.error(message);
-    } finally {
       setIsLoading(false);
     }
   }
